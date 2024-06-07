@@ -2,8 +2,10 @@ import os
 import atlassian
 from utils.logger import log
 
-confluence_url = os.getenv(
-    "CONFLUENCE_URL") or "https://paacklogistics.atlassian.net"
+
+confluence_url = os.getenv("CONFLUENCE_URL")
+if confluence_url is None:
+    raise ValueError("CONFLUENCE_URL is not set")
 confluence_token = os.getenv("CONFLUENCE_TOKEN")
 if confluence_token is None:
     raise ValueError("CONFLUENCE_TOKEN is not set")
