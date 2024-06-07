@@ -20,4 +20,4 @@ RUN pip install pytest
 CMD ["make", "test"]
 
 FROM app
-CMD ["python", "main.py"]
+CMD ["python", "cli.py"]

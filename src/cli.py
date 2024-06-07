@@ -5,6 +5,9 @@ from cmd.gitlab_terraform_modules import get_terraform_modules
 
 @click.group()
 def cli():
+    """
+    Group CLI commands
+    """
     pass
 
 
