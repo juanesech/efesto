@@ -27,8 +27,9 @@ def get_terraform_modules(gitlab_group_id, confluence_page_id):
         6. Updates the content of the Confluence page with the new table markup.
 
     """  # noqa: E501
+    glab = gitlab.Gitlab()
     page = confluence.get_page(confluence_page_id)
-    gitlab_projects = gitlab.get_projects_by_group(gitlab_group_id)
+    gitlab_projects = glab.get_projects_by_group(gitlab_group_id)
     table_data = []
     log.info("Retrieving group {} projects".format(gitlab_group_id))
     for project in gitlab_projects:
