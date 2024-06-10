@@ -1,6 +1,6 @@
 from data_sources import gitlab
 from data_sources import confluence
-from utils.objects import create_html_table
+import utils
 from utils.logger import log
 
 
@@ -26,26 +26,28 @@ def get_group_owners(gitlab_group_id, confluence_page_id):
         5. Updates the content of the Confluence page with the new table markup.
 
     """  # noqa: E501
-    page = confluence.get_page(confluence_page_id)
-    gitlab_groups = gitlab.get_subgroups(gitlab_group_id)
+    glab = gitlab.GitlabDS()
+    confl = confluence.ConfluenceDS()
+    page = confl.get_page(confluence_page_id)
+    gitlab_groups = glab.get_subgroups(gitlab_group_id)
     table_data = []
     log.info("Retrieving group {} owners".format(gitlab_group_id))
     for group in gitlab_groups:
-        if len(gitlab.get_subgroups(group.id)) > 0:
-            for subgroup in gitlab.get_subgroups(group.id):
+        if len(glab.get_subgroups(group.id)) > 0:
+            for subgroup in glab.get_subgroups(group.id):
                 log.debug("SUBGROUP PATH: {}".format(subgroup.path))
-                gr_owners = gitlab.get_group_owners(subgroup.id)
+                gr_owners = glab.get_group_owners(subgroup.id)
                 table_data.append([subgroup.full_path, ', '.join(
                     [gowner.name for gowner in gr_owners])])
         else:
-            gr_owners = gitlab.get_group_owners(group.id)
+            gr_owners = glab.get_group_owners(group.id)
             log.debug(group.full_path, gr_owners)
             log.debug("SUBGROUP PATH: {}".format(group.path))
             table_data.append([group.path, ', '.join(
                 [gowner.name for gowner in gr_owners])])
 
-    table_markup = create_html_table(["Group name", "Owner"], table_data)
+    table_markup = utils.html.create_table(["Group name", "Owner"], table_data)
     log.debug(table_markup)
     updated_content = table_markup
     log.info("Updating confluence page content")
-    confluence.update_page(confluence_page_id, page['title'], updated_content)
+    confl.update_page(confluence_page_id, page['title'], updated_content)

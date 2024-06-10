@@ -1,11 +1,18 @@
-name: Build
+name: CI
 on:
   push:
     branches:
       - main
+      - feature/**
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+  linux-build:
+    name: Linux Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: "make build-cli"
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
