@@ -1,7 +1,7 @@
 from typing import List
 
 
-def create_html_table(header: List[str], data: List[List[str]]):
+def create_table(header: List[str], data: List[List[str]]):
     """
     Creates an HTML table from a header and data.
 
@@ -13,7 +13,7 @@ def create_html_table(header: List[str], data: List[List[str]]):
         str: The HTML table as a string.
 
     Example:
-       >>> create_html_table(["Name", "Age"], [["John", "25"], ["Jane", "30"]])
+       >>> create_table(["Name", "Age"], [["John", "25"], ["Jane", "30"]])
         '<table><tr><th>Name</th><th>Age</th></tr><tr><td>John</td><td>25</td></tr><tr><td>Jane</td><td>30</td></tr></table>'
     """
     html_table = "<table>"

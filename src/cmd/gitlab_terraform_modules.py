@@ -1,7 +1,7 @@
 from data_sources import gitlab
 from data_sources import confluence
-from utils.objects import create_html_table
 from utils.logger import log
+import utils
 
 
 def get_terraform_modules(gitlab_group_id, confluence_page_id):
@@ -27,8 +27,9 @@ def get_terraform_modules(gitlab_group_id, confluence_page_id):
         6. Updates the content of the Confluence page with the new table markup.
 
     """  # noqa: E501
-    glab = gitlab.Gitlab()
-    page = confluence.get_page(confluence_page_id)
+    glab = gitlab.GitlabDS()
+    confl = confluence.ConfluenceDS()
+    page = confl.get_page(confluence_page_id)
     gitlab_projects = glab.get_projects_by_group(gitlab_group_id)
     table_data = []
     log.info("Retrieving group {} projects".format(gitlab_group_id))
@@ -46,10 +47,10 @@ def get_terraform_modules(gitlab_group_id, confluence_page_id):
             f"{tags[0].name}"])
 
     sorted_table_data = sorted(table_data, key=lambda x: x[0])
-    table_markup = create_html_table(
+    table_markup = utils.html.create_table(
         ["Module", "Latest version"], sorted_table_data)
     log.debug(table_markup)
     updated_content = table_markup
     log.info("Updating confluence page content")
-    confluence.update_page(
+    confl.update_page(
         confluence_page_id, page['title'], updated_content)
