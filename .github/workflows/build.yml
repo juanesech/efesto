@@ -7,6 +7,14 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+  linux-build:
+    name: Linux Build
+    runs-on: python:3.11-alpine
+    steps:
+      - uses: actions/checkout@v3
+      - run: "pip3 install -r requirements.txt"
+      - run: "apk add make ccache clang gcc patchelf"
+      - run: "make build-cli"
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
